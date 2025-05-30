@@ -1,0 +1,1129 @@
+{
+	"info": {
+		"_postman_id": "07f11e86-3ac8-4268-9527-d0096b9af08f",
+		"name": "Project Skuring New",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "28163727"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"skuring1901@gmail.com\",\r\n  \"password\": \"aflahEX@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"management\",\r\n  \"email\": \"skuring1901@gmail.com\",\r\n  \"password\": \"passwordEX@123\",\r\n  \"role_id\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/auth/register"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Faculty",
+			"item": [
+				{
+					"name": "Get All Faculty",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/faculty"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Faculty",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Teknologi dan Bisnis Energi\",\r\n    \"code\": \"-\",\r\n    \"description\": \"-\",\r\n    \"established_year\": \"2023\",\r\n    \"dean_name\": \"Suci\",\r\n    \"contact_email\": \"ftbe@itpln.ac.id\",\r\n    \"contact_phone\": \"081234567\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/faculty"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Detail Faculty",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/faculty/5"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Faculty",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Teknologi dan Bisnis Energi\",\r\n    \"code\": \"-\",\r\n    \"description\": \"test\",\r\n    \"established_year\": \"2023\",\r\n    \"dean_name\": \"Suci\",\r\n    \"contact_email\": \"ftbe@itpln.ac.id\",\r\n    \"contact_phone\": \"081234567\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/faculty/5"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Faculty",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/api/faculty/4"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Study Program",
+			"item": [
+				{
+					"name": "Retrieve All Study Program",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/study_program",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"study_program"
+							],
+							"query": [
+								{
+									"key": "faculty_id",
+									"value": "549b1db3-9b14-4191-8271-eda8b12ceda9",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Study Program",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Sistem Informasi\",\r\n    \"code\": \"51\",\r\n    \"description\": \"-\",\r\n    \"established_year\": 2025,\r\n    \"head_of_program\": \"Budi\",\r\n    \"contact_email\": \"si@itpln.ac.id\",\r\n    \"contact_phone\": \"081234567\",\r\n    \"faculty_id\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/study_program"
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Detail Study Program",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/study_program/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Study Program",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Sistem Informasi\",\n    \"code\": \"51\",\n    \"description\": \"test\",\n    \"established_year\": 2025,\n    \"head_of_program\": \"Budi\",\n    \"contact_email\": \"si@itpln.ac.id\",\n    \"contact_phone\": \"081234567\",\n    \"faculty_id\": 5\n}"
+						},
+						"url": "{{base_url}}/api/study_program/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Study Program",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/api/study_program/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "List Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "4",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identity_number\":\"123\",\n    \"first_name\": \"irfan\",\n    \"last_name\":\"fahmi\",\n    \"name\": \"irfan fahmi\",\n    \"email\": \"fahmiagaz@gmail.com\",\n    \"password\": \"skuring@123\",\n    \"role_id\": 4,\n    \"study_program_id\": 2\n}"
+						},
+						"url": "{{base_url}}/api/user"
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/user/17"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identity_number\": \"4245332\",\n    \"name\": \"Aflah Wahyu\",\n    \"email\": \"irfangamer@gmail.com\",\n    \"password\": \"aflahEX@123\",\n    \"role_id\": 4,\n    \"first_name\": \"Aflah\",\n    \"last_name\": \"Wahyu\",\n    \"study_program_id\": 2,\n    \"profile_picture\": \"-\",\n    \"birthdate\": \"1998-02-02\",\n    \"phone_number\": \"08123456789\"\n}"
+						},
+						"url": "{{base_url}}/api/user/17"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/api/user/15"
+					},
+					"response": []
+				},
+				{
+					"name": "Request Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"irfangamer@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/v1/request_reset_password"
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"skuring1901@gmail.com\",\r\n    \"password\":\"aflahEX@123\",\r\n    \"password_confirmation\":\"aflahEX@123\",\r\n    \"token\": \"73c2e029680788e7d5920ecc8bd3ff2bd18337b274f69402ea44c621473e9172\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/password/reset"
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Dolphin/Documents/aflah/sekuring/project/upload user.xlsx"
+								}
+							]
+						},
+						"url": "{{base_url}}/api/v1/user_upload_excel"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Period",
+			"item": [
+				{
+					"name": "List Periods",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/period"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Period",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"period\": \"Genap 2025\"\n}"
+						},
+						"url": "{{base_url}}/api/period"
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Period",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/period/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Period",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"period\": \"Genap 2025\"\n}"
+						},
+						"url": "{{base_url}}/api/period/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Period",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/api/period/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Class",
+			"item": [
+				{
+					"name": "Student in Class",
+					"item": [
+						{
+							"name": "Add Student in Class",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\r\n{\r\n  \"student_ids\": [2]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/class/1/students"
+							},
+							"response": []
+						},
+						{
+							"name": "Retrive Student in Class",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{base_url}}/api/class/1/students"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Student in Class",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "{{base_url}}/api/class/1/student/2"
+							},
+							"response": []
+						},
+						{
+							"name": "List Avaible Student",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/student?study_program_id=2&class_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"student"
+									],
+									"query": [
+										{
+											"key": "study_program_id",
+											"value": "2"
+										},
+										{
+											"key": "class_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Score in Class",
+					"item": [
+						{
+							"name": "Update Score Setting",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{    \r\n    \"percent_value\": {\r\n        \"1\": 15,\r\n        \"2\": 20,\r\n        \"3\": 25,\r\n        \"4\": 25,\r\n        \"5\": 15\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/class/1/score-setting"
+							},
+							"response": []
+						},
+						{
+							"name": "Student Presence Score",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"class_topic_id\":    1,\r\n\"student_id\":        1,\r\n\"presence_type_id\":  4  // 1,2,3 → score 100; 4 → score 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/class/1/student/presence"
+							},
+							"response": []
+						},
+						{
+							"name": "Student Assignment Score",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"class_topic_id\":    1,\r\n\"student_id\":        1,\r\n\"score\":  100\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/class/1/student/assignment"
+							},
+							"response": []
+						},
+						{
+							"name": "Retrive Student Assignment",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/class/1/student/assignment?topic_id=3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"class",
+										"1",
+										"student",
+										"assignment"
+									],
+									"query": [
+										{
+											"key": "topic_id",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrive Score Setting",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{base_url}}/api/class/1/score-setting"
+							},
+							"response": []
+						},
+						{
+							"name": "Retrive Student Presence",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/class/1/student/presence?class_topic_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"class",
+										"1",
+										"student",
+										"presence"
+									],
+									"query": [
+										{
+											"key": "class_topic_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "List Classes by Period",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/class",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"class"
+							],
+							"query": [
+								{
+									"key": "period_id",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Lecturer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/lecturer"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Class",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class_code\": \"CLS123\",\r\n    \"class_name_long\": \"Introduction to Programming\",\r\n    \"class_name_short\": \"IntroProg\",\r\n    \"class_availability\": 30,\r\n    \"description\": \"This is a basic programming class.\",\r\n    \"tag\": \"programming\",\r\n    \"responsible_lecturer_id\": 1,\r\n    \"study_program_id\": 2,\r\n    \"period_id\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/class"
+					},
+					"response": []
+				},
+				{
+					"name": "Retrive Class",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/class/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Class",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"class_code\": \"CLS123\",\r\n    \"class_name_long\": \"Introduction to Programming\",\r\n    \"class_name_short\": \"IntroProg\",\r\n    \"class_availability\": 30,\r\n    \"description\": \"This is a basic programming class.\",\r\n    \"tag\": \"programming\",\r\n    \"responsible_lecturer_id\": 1,\r\n    \"study_program_id\": 2,\r\n    \"period_id\": 2,\r\n    \"class_thumbnail\" : \"-\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/class/:pk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"class",
+								":pk"
+							],
+							"variable": [
+								{
+									"key": "pk",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Class",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/class/:pk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"class",
+								":pk"
+							],
+							"variable": [
+								{
+									"key": "pk",
+									"value": "250de621-59fa-4e87-bb37-f95942a8d00b"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Topic",
+			"item": [
+				{
+					"name": "Modul",
+					"item": [
+						{
+							"name": "List Modul",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/modules?class_topic_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"modules"
+									],
+									"query": [
+										{
+											"key": "class_topic_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Multi Modul",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"class_topic_id\": 1,\n  \"modules\": [\n    {\n    //   \"id\":1,\n      \"modul\": \"Pendahuluan\",\n      \"content\": \"skuring/modul/123/test.pdf\",\n      \"description\": \"-\",\n      \"modul_type_id\": 2\n    }\n  ]\n}"
+								},
+								"url": "{{base_url}}/api/modules/update"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Question",
+					"item": [
+						{
+							"name": "List Multi Question",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/questions?class_topic_id=1&score_type_id=3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"questions"
+									],
+									"query": [
+										{
+											"key": "class_topic_id",
+											"value": "1"
+										},
+										{
+											"key": "score_type_id",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Multi Qusetion",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "     {\r\n        \"class_topic_id\": 1,\r\n        \"score_type_id\": 3,\r\n        \"questions\": [\r\n          {\r\n            \"id\": 7,                          // nullable: update jika ada\r\n            \"question\": \"Pertanyaan ...\",\r\n            \"is_essay\": true,\r\n            \"is_multiple_choice\": false,\r\n            \"multiple_choice_options\": null,\r\n            \"true_answer\": \"Jawaban benar\"\r\n          },\r\n          {\r\n            \"id\": 8,\r\n            \"question\": \"Pilih Eloquent atau Query Builder\",\r\n            \"is_essay\": false,\r\n            \"is_multiple_choice\": true,\r\n            \"multiple_choice_options\": \"Eloquent,Query Builder\",\r\n            \"true_answer\": \"Eloquent\"\r\n            }\r\n          // …\r\n        ]\r\n      }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/questions/update"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Assignment",
+					"item": [
+						{
+							"name": "Create Topic Assignment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"class_topic_id\": 1,\n  \"title\": \"Tugas A\",\n  \"description\": \"Deskripsi…\",\n  \"due_date\": \"2025-05-20 14:30:00\"\n}"
+								},
+								"url": "{{base_url}}/api/assignment"
+							},
+							"response": []
+						},
+						{
+							"name": "Retrieve Topic Assignment",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/assignment?class_topic_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"assignment"
+									],
+									"query": [
+										{
+											"key": "class_topic_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Topic Assignment",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"class_topic_id\": 1,\n  \"title\": \"Tugas B\",\n  \"description\": \"Deskripsi…\",\n  \"due_date\": \"2025-05-20 14:30:00\"\n}"
+								},
+								"url": "{{base_url}}/api/assignment"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Period",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"class_topic_id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/assignment"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "List Topics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/topic?class_id=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"topic"
+							],
+							"query": [
+								{
+									"key": "class_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Topic",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Introduction to RL\",\n  \"class_id\": 1\n}"
+						},
+						"url": "{{base_url}}/api/topic"
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Topic",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/topic/:pk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"topic",
+								":pk"
+							],
+							"variable": [
+								{
+									"key": "pk",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Topic",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Introduction to ML Edit\",\n  \"class_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/topic/:pk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"topic",
+								":pk"
+							],
+							"variable": [
+								{
+									"key": "pk",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Topic",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/topic/:pk",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"topic",
+								":pk"
+							],
+							"variable": [
+								{
+									"key": "pk",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Student",
+			"item": [
+				{
+					"name": "Topic",
+					"item": [
+						{
+							"name": "Submit Assignment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"assignment_file\": \"path/to_file.pdf\",\n//   \"lecture_feedback\": \"Good\",\n//   \"revision_date\": \"2025-05-20\",\n  \"topic_assignment_id\": 3,\n  \"class_topic_id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{base_url}}/api/student/2/assignment"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "5|YMHuZAHIODucCUQzl84QwtEOwm0s6CXt6HbkFHssafe7519d"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://skuring.com:8000",
+			"type": "string"
+		}
+	]
+}
