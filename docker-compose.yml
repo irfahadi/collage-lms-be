@@ -1,0 +1,45 @@
+services:
+  mariadb:
+    image: mariadb:10.11
+    container_name: mariadb10-lts
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: admin
+      MARIADB_DATABASE: lms
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: admin
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: root
+      PMA_PASSWORD: admin
+      UPLOAD_LIMIT: 4000M
+    ports:
+      - "8082:80"
+    depends_on:
+      - mariadb
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+  mailpit:
+      image: axllent/mailpit
+      container_name: mailpit
+      restart: unless-stopped
+      ports:
+          - "8025:8025"
+          - "1025:1025"
+volumes:
+  mariadb_data:
+  redis_data:
