@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\ClassApp;
 use App\Models\ClassTopic;
+use App\Models\ScoreType;
+use App\Models\ScoreSetting;
+use App\Models\Student;
+use App\Models\StudentScore;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,11 +22,11 @@ class ClassTopicMenuController extends Controller
         $user = Auth::user();
         
         // Validasi akses mahasiswa
-        if (!$user->student || !$class->students->contains($user->student)) {
-            return response()->json([
-                'message' => 'Unauthorized: Not enrolled in this class'
-            ], 403);
-        }
+        // if (!$user->student || !$class->students->contains($user->student)) {
+        //     return response()->json([
+        //         'message' => 'Unauthorized: Not enrolled in this class'
+        //     ], 403);
+        // }
 
         // Ambil semua topik beserta menu-nya
         $topics = ClassTopic::with('classTopicMenu')
@@ -48,27 +53,46 @@ class ClassTopicMenuController extends Controller
         ]);
     }
 
-    public function getModules(ClassTopic $classTopic)
+    public function getExamQuestions(ClassTopic $classTopic, ScoreType $scoreType)
     {
-        $modules = $classTopic->modules()
-            ->get();
+        $user = Auth::user();
+        
+        $student = Student::where('user_id', $user->id)->first();
+        $studentId = $student->id;
+        
+         // Ambil data ClassTopic untuk mendapatkan class_id
+        $classTopic = ClassTopic::findOrFail($classTopic->id);
+        $classId = $classTopic->class_id;
 
-        return response()->json([
-            'data' => $modules
-        ], 200);
-    }
+        // Cari ScoreSetting berdasarkan class_id dan score_type_id
+        $scoreSetting = ScoreSetting::where('class_id', $classId)
+            ->where('score_type_id', $scoreType->id)
+            ->first();
 
-    public function getExamQuestions(ClassTopic $classTopic)
-    {
+        // Cek apakah ada record di StudentScore
+        $scoreEntry = StudentScore::where('student_id', $studentId)
+            ->where('class_topic_id', $classTopic->id)
+            ->when($scoreSetting, function ($query) use ($scoreSetting) {
+                $query->where('score_setting_id', $scoreSetting->id);
+            })
+            ->first();
+
         $examQuestions = $classTopic->examQuestions()
-            ->get()
+            ->get()->where('score_type_id', $scoreType->id)
             ->map(function ($question) {
                 // Format data pivot
                 return $question;
-            });
+            })->makeHidden('true_answer');
+
+        $responseData = [
+            'is_answered' => $scoreEntry ? true : false,
+            'score' => $scoreEntry ? $scoreEntry->score : null,
+            'questions' => $examQuestions
+        ];
+
 
         return response()->json([
-            'data' => $examQuestions
+            'data' => $responseData
         ], 200);
     }
 }

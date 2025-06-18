@@ -6,6 +6,7 @@ use App\Models\ClassApp;
 use App\Models\ClassTopic;
 use App\Models\StudentExamAnswer;
 use App\Models\TopicExamQuestion;
+use App\Models\Student;
 use App\Models\StudentScore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,9 @@ class StudentExamAnswerController extends Controller
             'answers.*.student_answer' => 'required|string|max:65535'
         ]);
 
-        $studentId = auth()->user()->student->id;
+        $user = $request->user();
+        $student = Student::where('user_id', $user->id)->first();
+        $studentId = $student->id;
         $examQuestionIds = collect($validated['answers'])->pluck('topic_exam_question_id');
 
         // Cek apakah ada jawaban yang sudah pernah di-submit

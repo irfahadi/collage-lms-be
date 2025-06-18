@@ -36,14 +36,15 @@ class DashboardController extends Controller
     public function student(Request $request){
         $user = Auth::user();
         
+        $student = Student::where('user_id', $user->id)->first();
+        $studentId = $student->id;
+        
         // Cek apakah user adalah mahasiswa
-        if (!$user->student) {
+        if (empty($student)) {
             return response()->json([
                 'message' => 'Unauthorized: User is not a student'
             ], 403);
         }
-
-        $studentId = $user->student->id;
 
         $classes = ClassApp::whereHas('students', function($query) use ($studentId) {
                 $query->where('id', $studentId);

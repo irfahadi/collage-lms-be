@@ -103,7 +103,7 @@ class ClassAppController extends Controller
     public function show($id)
     {
          //find post by ID
-         $data = ClassApp::where('id',$id)->with(['studyProgram','lecturer','period'])->first();
+         $data = ClassApp::where('id',$id)->with(['studyProgram.faculty','lecturer','period'])->first();
 
          //return single post as a resource
          return new ApiOneResource(200, 'Detail Data Kelas!', $data);

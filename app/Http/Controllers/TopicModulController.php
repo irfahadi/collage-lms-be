@@ -153,7 +153,11 @@ class TopicModulController extends Controller
                 // asumsikan content = path di bucket IdCloudHost
                 $data['url'] = Storage::disk('idcloud')->temporaryUrl(
                     $modul->content,
-                    now()->addMinutes(60)
+                    now()->addMinutes(60),
+                    [
+                        'ResponseContentDisposition' => 'inline',
+                        'ResponseContentType' => 'application/pdf',
+                    ]   
                 );
             } else {
                 $data['content'] = $modul->content;

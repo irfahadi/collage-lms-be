@@ -17,35 +17,38 @@ use Illuminate\Validation\Rule;
 class UserController extends Controller
 {
     public function index (){
-        $users = User::with(['student.studyProgram.faculty', 'lecture.studyProgram.faculty'])->get();
+        $users = User::latest()->get();
         $data = $users->map(function ($user) {
             if (in_array($user->role_id, [1, 2, 3])) {
+                $lecture = Lecture::with('studyProgram')->where('user_id',$user->id)->first();
                 return [
                     'id' => $user->id,
                     'name' => $user->name,
                     'role_id' => $user->role_id,
-                    'first_name' => $user->lecture->first_name ?? null,
-                    'last_name' => $user->lecture->last_name ?? null,
-                    'phone_number' => $user->lecture->phone_number ?? null,
+                    'first_name' => $lecture->first_name ?? null,
+                    'last_name' => $lecture->last_name ?? null,
+                    'phone_number' => $lecture->phone_number ?? null,
                     'email' => $user->email ?? null,
-                    'identity_number' => $user->lecture->nidn ?? null,
-                    'profile_picture' => $user->lecture->profile_picture ?? null,
+                    'identity_number' => $lecture->nidn ?? null,
+                    'profile_picture' => $lecture->profile_picture ?? null,
                     'role_name' => $user->role->role ?? null,
-                    'faculty_name' => $user->lecture->studyProgram->faculty->name ?? null,
+                    'faculty_name' => $lecture->studyProgram->faculty->name ?? null,
                 ];
-            } elseif ($user->role_id == 4) {
+            } 
+            elseif ($user->role_id == 4) {
+                $student = Student::with('studyProgram')->where('user_id',$user->id)->first();
                 return [
                     'id' => $user->id,
                     'name' => $user->name,
                     'role_id' => $user->role_id,
-                    'first_name' => $user->student->first_name ?? null,
-                    'last_name' => $user->student->last_name ?? null,
-                    'phone_number' => $user->student->phone_number ?? null,
+                    'first_name' => $ustudent->first_name ?? null,
+                    'last_name' => $ustudent->last_name ?? null,
+                    'phone_number' => $ustudent->phone_number ?? null,
                     'email' => $user->email ?? null,
-                    'identity_number' => $user->student->nim ?? null,
-                    'profile_picture' => $user->student->profile_picture ?? null,
+                    'identity_number' => $student->nim ?? null,
+                    'profile_picture' => $student->profile_picture ?? null,
                     'role_name' => $user->role->role ?? null,
-                    'faculty_name' => $user->student->studyProgram->faculty->name ?? null,
+                    'faculty_name' => $student->studyProgram->faculty->name ?? null,
                 ];
             } 
         });

@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\StudentAssignment;
 use App\Models\TopicAssignment;
+use App\Models\Student;
 use App\Models\StudentScore;
 use App\Models\ScoreSetting;
 use App\Models\ClassApp;
 use App\Models\ClassTopic;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use App\Http\Resources\ApiOneResource;
 
 class StudentAssignmentController extends Controller
 {
@@ -60,7 +63,7 @@ class StudentAssignmentController extends Controller
                 // asumsikan content = path di bucket IdCloudHost
                 $studentData['student_assignment']['assignment_file'] = Storage::disk('idcloud')->temporaryUrl(
                     $studentData['student_assignment']['assignment_file'],
-                    now()->addMinutes(60)
+                    now()->addMinutes(60),
                 );
             }
             
@@ -133,6 +136,42 @@ class StudentAssignmentController extends Controller
             'data' => $studentScore,
         ], 200);
     }
+
+    public function getStudentAssignment(Request $request, $class_id, $class_topic_id)
+        {
+            // Validasi: Pastikan ClassTopic dengan class_topic_id ada dan terkait dengan class_id
+            $classTopic = ClassTopic::where('id', $class_topic_id)
+                ->where('class_id', $class_id)
+                ->with('topicAssignment')
+                ->first();
+
+            if (!$classTopic) {
+                return new ApiOneResource(404, 'Topik Kelas Tidak Ditemukan atau Tidak Terkait dengan Kelas Ini!', null);
+            }
+
+            // Pastikan TopicAssignment tersedia untuk topik ini
+            if (!$classTopic->topicAssignment) {
+                return new ApiOneResource(404, 'Tugas Topik Belum Dibuat!', null);
+            }
+
+            $user = $request->user();
+            $student = Student::where('user_id', $user->id)->first();
+            $studentId = $student->id;
+
+            // Cek apakah mahasiswa sudah mengumpulkan tugas
+            $studentAssignment = StudentAssignment::where('topic_assignment_id', $classTopic->topicAssignment->id)
+                ->where('student_id', $studentId)
+                ->first();
+
+            // Format respons dengan status pengumpulan
+            $responseData = [
+                'topic_assignment' => $classTopic->topicAssignment,
+                'student_assignment' => $studentAssignment,
+                'is_submitted' => (bool) $studentAssignment,
+            ];
+
+            return new ApiOneResource(200, 'Detail Tugas & Status Pengumpulan!', $responseData);
+        }
     
     public function submitAssignment(Request $request, ClassTopic $classTopic)
     {
@@ -144,7 +183,9 @@ class StudentAssignmentController extends Controller
         ]);
 
          // Ambil student_id dari user yang login
-        $validated['student_id'] = auth()->user()->student->id;
+        $user = $request->user();
+        $student = Student::where('user_id', $user->id)->first();
+        $validated['student_id'] = $student->id;
         $validated['class_topic_id'] = $classTopic->id; // Ambil dari model yang di-resolve
 
         // Ambil topic assignment terkait
@@ -160,7 +201,7 @@ class StudentAssignmentController extends Controller
         // Validasi created_at dan updated_at harus sebelum due_date
         if ($now->gte($topicAssignment->due_date)) {
             throw ValidationException::withMessages([
-                'due_date' => 'Current date/time must be before the due date of the assignment.'
+                'due_date' => 'waktu pengumpulan tugas telah melewati tenggat waktu penugasan.'
             ]);
         }
 

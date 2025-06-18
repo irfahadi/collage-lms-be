@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Student;
+use App\Models\StudentPresence;
 use App\Models\StudentScore;
 use App\Models\ScoreSetting;
 use App\Models\ClassApp;
+use App\Models\ClassTopic;
 use Illuminate\Support\Facades\Auth;
 use DB;
 
@@ -60,12 +63,15 @@ class StudentScoreController extends Controller
 
     public function report(Request $request){
         $request->validate(['class_id' => 'required|integer|exists:class,id']);
-        $student = Auth::user()->student;
+        $user=Auth::user();
+        $student = Student::where('user_id', $user->id)->first();
         $classId = $request->query('class_id');
     
         // Validasi keanggotaan kelas
         $class = ClassApp::whereHas('students', fn($q) => $q->where('id', $student->id))
                          ->findOrFail($classId);
+
+        $classTopicIds = ClassTopic::where('class_id', $classId)->pluck('id');
     
         $settings = ScoreSetting::where('class_id', $classId)
                       ->with('scoreType')
@@ -93,9 +99,35 @@ class StudentScoreController extends Controller
             return ($score['total_score'] * $score['score_percent_value']) / 100;
         });
     
+        // Hitung jumlah pertemuan dan kehadiran
+        $totalMeetings = ClassTopic::where('class_id', $classId)->count();
+
+        $presenceData = StudentPresence::whereIn('class_topic_id', $classTopicIds)
+            ->where('student_id', $student->id)
+            ->get()
+            ->groupBy('presence_type_id')
+            ->map(fn($group) => $group->count());
+
+        $defaultPresence = [
+            1 => 0, // hadir
+            2 => 0, // sakit
+            3 => 0, // izin
+            4 => 0, // alfa
+        ];
+
+        $presenceSummary = array_merge($defaultPresence, $presenceData->toArray());
+
+        // Gabung data laporan
         $report = array_merge($student->toArray(),[
             'scores' => $studentScores,
-            'total_score' => round($totalScore, 2), // Total skor akhir
+            'total_score' => round($totalScore, 2),
+            'attendance' => [
+                'total_meetings' => $totalMeetings,
+                'present' => $presenceSummary[1],
+                'sick' => $presenceSummary[2],
+                'permission' => $presenceSummary[3],
+                'absent' => $presenceSummary[4],
+            ],
         ]);
     
         return response()->json([

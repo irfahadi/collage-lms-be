@@ -14,6 +14,9 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens;
 
+    protected $connection = 'mariadb_second';
+    protected $table = 'users';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -49,15 +52,15 @@ class User extends Authenticatable
         ];
     }
 
-    public function lecture()
-    {
-        return $this->hasOne(Lecture::class, 'user_id');
-    }
+    // public function lecture()
+    // {
+    //     return $this->hasOne(Lecture::class, 'user_id');
+    // }
 
-    public function student()
-    {
-        return $this->hasOne(Student::class, 'user_id');
-    }
+    // public function student()
+    // {
+    //     return $this->hasOne(Student::class, 'user_id');
+    // }
 
     public function role()
     {

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
+    protected $connection = 'mariadb_second';
     protected $table = 'roles';
     /** @use HasFactory<\Database\Factories\RoleFactory> */
     use HasFactory;

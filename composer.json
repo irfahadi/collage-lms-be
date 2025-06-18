@@ -8,6 +8,8 @@
     "require": {
         "php": "^8.2",
         "atomescrochus/laravel-string-similarities": "^2.1",
+        "firebase/php-jwt": "^6.11",
+        "kreait/firebase-php": "^7.18",
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.1",
         "laravel/tinker": "^2.9",
