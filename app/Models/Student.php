@@ -12,9 +12,9 @@ class Student extends Model
     use HasFactory;
     protected $fillable = ['first_name', 'last_name', 'profile_picture', 'birthdate', 'phone_number', 'nim', 'user_id', 'study_program_id'];
     
-    public function users() {
-        return $this->belongsTo(Users::class);
-    }
+    // public function users() {
+    //     return $this->belongsTo(Users::class);
+    // }
 
     
     public function studyProgram() {

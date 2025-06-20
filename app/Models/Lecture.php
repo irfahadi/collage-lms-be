@@ -13,9 +13,9 @@ class Lecture extends Model
 
     protected $fillable = ['first_name', 'last_name', 'profile_picture', 'birthdate', 'phone_number', 'nidn', 'user_id', 'study_program_id'];
     
-    public function users() {
-        return $this->belongsTo(Users::class);
-    }
+    // public function users() {
+    //     return $this->belongsTo(Users::class);
+    // }
     
     public function studyProgram() {
         return $this->belongsTo(StudyProgram::class);
