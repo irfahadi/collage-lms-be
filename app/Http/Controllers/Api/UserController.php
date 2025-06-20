@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Password;
 
 class UserController extends Controller
 {
@@ -41,9 +42,9 @@ class UserController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'role_id' => $user->role_id,
-                    'first_name' => $ustudent->first_name ?? null,
-                    'last_name' => $ustudent->last_name ?? null,
-                    'phone_number' => $ustudent->phone_number ?? null,
+                    'first_name' => $student->first_name ?? null,
+                    'last_name' => $student->last_name ?? null,
+                    'phone_number' => $student->phone_number ?? null,
                     'email' => $user->email ?? null,
                     'identity_number' => $student->nim ?? null,
                     'profile_picture' => $student->profile_picture ?? null,
@@ -85,7 +86,7 @@ class UserController extends Controller
         ]);
 
         // Generate API token
-        $token = $user->createToken('myAppToken')->plainTextToken;
+        $token = Password::broker('users')->createToken($user);
 
         if (in_array($request->role_id, [1, 2, 3])) {
             Lecture::create([
@@ -112,10 +113,10 @@ class UserController extends Controller
         }
 
         //Send welcome email with token
-        // Mail::raw("Selamat datang, {$user->name}!\nBerikut API token Anda: {$token}", function ($message) use ($user) {
-        //     $message->to($user->email)
-        //             ->subject('Welcome to MyApp');
-        // });
+        Mail::raw("Selamat datang, {$user->name}!\nBerikut link untuk reset password Anda: http://skuring.com/resetpassword/{$token}?email={$request->email}", function ($message) use ($user) {
+            $message->to($user->email)
+                    ->subject('Welcome to MyApp');
+        });
 
         return response()->json([
             'message' => 'User berhasil dibuat',
@@ -130,7 +131,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name'              => ['required', 'string', 'max:255'],
-            'email'             => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($id)],
+            'email'             => ['required', 'string', 'email', 'max:255'],
             'password'          => ['nullable', 'string', 'min:6'],
             'role_id'           => ['required', 'integer', Rule::in([1, 2, 3, 4])],
             'first_name'        => ['required', 'string', 'max:255'],
@@ -220,6 +221,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+        // dd($user);
 
         // Hapus relasi sesuai role
         if (in_array($user->role_id, [1, 2, 3])) {

@@ -16,22 +16,22 @@ class LoginController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required'],
-            'password' => ['required'],
-        ]);
+        // $credentials = $request->validate([
+        //     'email' => ['required'],
+        //     'password' => ['required'],
+        // ]);
 
-        if (auth()->attempt($credentials)) {
-            $user = auth()->user();
+        // if (auth()->attempt($credentials)) {
+        //     $user = auth()->user();
 
-        //return response
-         return new UserResource(true, 'Anda Berhasil Login!', $user)->additional([
-                'token' => $user->createToken('myAppToken')->plainTextToken,
-            ]);
-        }
+        // //return response
+        //  return new UserResource(true, 'Anda Berhasil Login!', $user)->additional([
+        //         'token' => $user->createToken('myAppToken')->plainTextToken,
+        //     ]);
+        // }
 
-        return response()->json([
-            'message' => 'Your credential does not match.',
-        ], 401);
+        // return response()->json([
+        //     'message' => 'Your credential does not match.',
+        // ], 401);
     }
 }
