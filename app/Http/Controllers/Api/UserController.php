@@ -20,7 +20,7 @@ class UserController extends Controller
     public function index (){
         $users = User::latest()->get();
         $data = $users->map(function ($user) {
-            if (in_array($user->role_id, [1, 2, 3])) {
+            if (in_array($user->role_id, [1, 2, 3, 5])) {
                 $lecture = Lecture::with('studyProgram')->where('user_id',$user->id)->first();
                 return [
                     'id' => $user->id,
@@ -66,7 +66,7 @@ class UserController extends Controller
             'name'              => ['required', 'string', 'max:255'],
             'email'             => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password'          => ['required', 'string', 'min:6'],
-            'role_id'           => ['required', 'integer', Rule::in([1, 2, 3, 4])],
+            'role_id'           => ['required', 'integer', Rule::in([1, 2, 3, 4, 5])],
             'first_name'        => ['required', 'string', 'max:255'],
             'last_name'         => ['required', 'string', 'max:255'],
             'identity_number'   => ['required', 'string', 'max:100'],
@@ -133,7 +133,7 @@ class UserController extends Controller
             'name'              => ['required', 'string', 'max:255'],
             'email'             => ['required', 'string', 'email', 'max:255'],
             'password'          => ['nullable', 'string', 'min:6'],
-            'role_id'           => ['required', 'integer', Rule::in([1, 2, 3, 4])],
+            'role_id'           => ['required', 'integer', Rule::in([1, 2, 3, 4, 5])],
             'first_name'        => ['required', 'string', 'max:255'],
             'last_name'         => ['required', 'string', 'max:255'],
             'identity_number'   => ['required', 'string', 'max:100'],
@@ -156,7 +156,7 @@ class UserController extends Controller
         }
         $user->save();
 
-        if (in_array($request->role_id, [1, 2, 3])) {
+        if (in_array($request->role_id, [1, 2, 3, 5])) {
             Lecture::updateOrCreate(
                 ['user_id' => $user->id],
                 [
@@ -197,7 +197,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $userData = $user->toArray();
 
-        if (in_array($user->role_id, [1, 2, 3])) {
+        if (in_array($user->role_id, [1, 2, 3, 5])) {
             $lecture = Lecture::where('user_id', $user->id)->first();
             if ($lecture) {
                 $userData = array_merge($userData, $lecture->toArray(), [
@@ -224,7 +224,7 @@ class UserController extends Controller
         // dd($user);
 
         // Hapus relasi sesuai role
-        if (in_array($user->role_id, [1, 2, 3])) {
+        if (in_array($user->role_id, [1, 2, 3, 5])) {
             Lecture::where('user_id', $user->id)->delete();
         } elseif ($user->role_id === 4) {
             Student::where('user_id', $user->id)->delete();

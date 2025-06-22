@@ -17,19 +17,44 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        // dd($user);
-        // $studyProgramId = $user->study_program_id;
 
         $content = [];
         // $content = ['message' => 'Hello, World!'];
 
         if ($user->role_id === 2) {
-            // $content['message'] = 'Hello, Manager!';
-            $content['student_count'] = Student::count();
-            $content['lecturer_count'] = Lecture::count();
-            $content['class_count'] = ClassApp::count();
-            $content['meeting_count'] = ClassTopic::count();
+            $lecture = Lecture::where('user_id',$user->id)->with('studyProgram')->first();
+            $facultyId = $lecture->studyProgram->faculty_id;
+            $content['student_count'] = Student::whereHas('studyProgram', function ($query) use ($facultyId) {
+                $query->where('faculty_id', $facultyId);
+            })->count();
+
+            $content['lecturer_count'] = Lecture::whereHas('studyProgram', function ($query) use ($facultyId) {
+                $query->where('faculty_id', $facultyId);
+            })->count();
+
+            $content['class_count'] = ClassApp::whereHas('studyProgram', function ($query) use ($facultyId) {
+                $query->where('faculty_id', $facultyId);
+            })->count();
+
+            // Untuk ClassTopic, perlu join melalui ClassApp → StudyProgram
+            $content['meeting_count'] = ClassTopic::whereHas('class.studyProgram', function ($query) use ($facultyId) {
+                $query->where('faculty_id', $facultyId);
+            })->count();
         } 
+
+        if ($user->role_id === 5) {
+            $lecture = Lecture::where('user_id',$user->id)->first();
+            $studyProgramId=$lecture->study_program_id;
+            $content['student_count'] = Student::where('study_program_id', $studyProgramId)->count();
+            $content['lecturer_count'] = Lecture::where('study_program_id', $studyProgramId)->count();
+            $content['class_count'] = ClassApp::where('study_program_id', $studyProgramId)->count();
+            // Untuk ClassTopic, karena tidak memiliki study_program_id langsung, 
+            // kita perlu memfilter melalui relasi "class"
+            $content['meeting_count'] = ClassTopic::whereHas('class', function ($query) use ($studyProgramId) {
+                $query->where('study_program_id', $studyProgramId);
+            })->count();
+        } 
+
         return response()->json($content);
     }
 
