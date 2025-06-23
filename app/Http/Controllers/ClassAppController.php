@@ -25,9 +25,15 @@ class ClassAppController extends Controller
     {
         // Ambil parameter period_id dari query string
         $periodId = $request->query('period_id');
+        $user = $request->user();
 
         // Query dasar
         $query = ClassApp::with(['studyProgram','lecturer','period'])->latest();
+
+        if ($user->role_id === 2||$user->role_id === 3|| $user->role_id === 5 ) {
+            $lecture = Lecture::where('user_id',$user->id)->with('studyProgram')->first();
+            $query->where('responsible_lecturer_id', $lecture->id);
+        }
 
         // Jika period_id ada, filter query-nya
         if ($periodId) {
