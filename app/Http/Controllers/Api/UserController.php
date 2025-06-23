@@ -71,6 +71,9 @@ class UserController extends Controller
             'last_name'         => ['required', 'string', 'max:255'],
             'identity_number'   => ['required', 'string', 'max:100'],
             'study_program_id'  => ['required', 'integer', 'exists:study_program,id'],
+            'profile_picture'   => ['nullable', 'string'],
+            'birthdate'         => ['nullable', 'date'],
+            'phone_number'      => ['nullable', 'string', 'max:20'],
         ]);
 
         if ($validator->fails()) {
@@ -88,7 +91,7 @@ class UserController extends Controller
         // Generate API token
         $token = Password::broker('users')->createToken($user);
 
-        if (in_array($request->role_id, [1, 2, 3])) {
+        if (in_array($request->role_id, [1, 2, 3, 5])) {
             Lecture::create([
                 'user_id'         => $user->id,
                 'first_name'      => $request->first_name,
