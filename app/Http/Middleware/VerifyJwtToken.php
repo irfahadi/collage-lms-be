@@ -85,7 +85,7 @@ class VerifyJwtToken
         } catch (\Throwable $e) {
             // Catch any other unexpected errors
             Log::error('An unexpected error occurred during Firebase token verification: ' . $e->getMessage());
-            return response()->json(['error' => 'Authentication failed'], 500);
+            return response()->json(['error' => 'Invalid or expired Firebase ID Token'], 401);
         }
     }
 }
