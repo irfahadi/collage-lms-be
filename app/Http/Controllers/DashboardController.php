@@ -40,6 +40,46 @@ class DashboardController extends Controller
             $content['meeting_count'] = ClassTopic::whereHas('class.studyProgram', function ($query) use ($facultyId) {
                 $query->where('faculty_id', $facultyId);
             })->count();
+            // Ambil list data dengan format yang diminta
+            $content['students'] = Student::whereHas('studyProgram', function ($query) use ($facultyId) {
+                $query->where('faculty_id', $facultyId);
+            })->select('first_name', 'last_name')
+            ->get()
+            ->map(function ($student) {
+                return [
+                    'label' => $student->first_name . ' ' . $student->last_name,
+                ];
+            });
+
+            $content['lecturers'] = Lecture::whereHas('studyProgram', function ($query) use ($facultyId) {
+                $query->where('faculty_id', $facultyId);
+            })->select('first_name', 'last_name')
+            ->get()
+            ->map(function ($lecture) {
+                return [
+                    'label' => $lecture->first_name . ' ' . $lecture->last_name,
+                ];
+            });
+
+            $content['classes'] = ClassApp::whereHas('studyProgram', function ($query) use ($facultyId) {
+                $query->where('faculty_id', $facultyId);
+            })->select('class_name_long')
+            ->get()
+            ->map(function ($class) {
+                return [
+                    'label' => $class->class_name_long,
+                ];
+            });
+
+            $content['meetings'] = ClassTopic::whereHas('class.studyProgram', function ($query) use ($facultyId) {
+                $query->where('faculty_id', $facultyId);
+            })->select('title')
+            ->get()
+            ->map(function ($topic) {
+                return [
+                    'label' => $topic->title,
+                ];
+            });
         } 
 
         if ($user->role_id === 5) {
@@ -53,6 +93,43 @@ class DashboardController extends Controller
             $content['meeting_count'] = ClassTopic::whereHas('class', function ($query) use ($studyProgramId) {
                 $query->where('study_program_id', $studyProgramId);
             })->count();
+            // Ambil list data dengan format yang diminta
+            $content['students'] = Student::where('study_program_id', $studyProgramId)
+                ->select('first_name', 'last_name')
+                ->get()
+                ->map(function ($student) {
+                    return [
+                        'label' => $student->first_name . ' ' . $student->last_name,
+                    ];
+                });
+
+            $content['lecturers'] = Lecture::where('study_program_id', $studyProgramId)
+                ->select('first_name', 'last_name')
+                ->get()
+                ->map(function ($lecture) {
+                    return [
+                        'label' => $lecture->first_name . ' ' . $lecture->last_name,
+                    ];
+                });
+
+            $content['classes'] = ClassApp::where('study_program_id', $studyProgramId)
+                ->select('class_name_long')
+                ->get()
+                ->map(function ($class) {
+                    return [
+                        'label' => $class->class_name_long,
+                    ];
+                });
+
+            $content['meetings'] = ClassTopic::whereHas('class', function ($query) use ($studyProgramId) {
+                $query->where('study_program_id', $studyProgramId);
+            })->select('title')
+                ->get()
+                ->map(function ($topic) {
+                    return [
+                        'label' => $topic->title,
+                    ];
+                });
         } 
 
         return response()->json($content);
