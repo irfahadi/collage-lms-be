@@ -167,9 +167,9 @@ class TopicExamQuestionController extends Controller
             // 5. Manage ClassTopicMenu.is_exam
             $hasQs = count($processedIds) > 0;
             if ($hasQs) {
-                $menuLabel = $scoreTypeId === 3
+                $menuLabel = $scoreTypeId == '3'
                 ? 'Kuis'
-                : ($scoreTypeId === 4
+                : ($scoreTypeId == '4'
                     ? 'UTS'
                     : 'UAS');
                 ClassTopicMenu::firstOrCreate(
