@@ -12,7 +12,7 @@ use App\Http\Controllers\StudentPresenceScoreController;
 use App\Http\Controllers\StudentAssignmentController;
 use App\Http\Controllers\ClassTopicMenuController;
 
-Route::post('auth/register', \App\Http\Controllers\Api\Auth\RegisterController::class);
+Route::post('/register', \App\Http\Controllers\Api\Auth\RegisterController::class);
 //Route::post('auth/login', \App\Http\Controllers\Api\Auth\LoginController::class);
 Route::post('/password/reset', [\App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']); 
 Route::middleware([VerifyJwtToken::Class])->get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index']); 

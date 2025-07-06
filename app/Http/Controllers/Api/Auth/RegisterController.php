@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
@@ -36,11 +37,12 @@ class RegisterController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'password' => Hash::make($request->password),
             'role_id' => $request->role_id,
         ]);
 
-        $token = $user->createToken('myAppToken');
+        // Generate API token
+        $token = Password::broker('users')->createToken($user);
 
         return $this->sendResetLinkEmail($request);
     }
@@ -63,13 +65,13 @@ class RegisterController extends Controller
         $token = Password::createToken($user);
 
         // Send email with the reset token
-        Mail::raw("Gunakan token berikut untuk mereset password Anda: {$token}", function ($message) use ($request) {
-            $message->to($request->email)
-                    ->subject('Reset Password Notification');
+        Mail::raw("Selamat datang, {$user->name}!\nBerikut link untuk reset password Anda: http://skuring.com/resetpassword/{$token}?email={$request->email}", function ($message) use ($user) {
+            $message->to($user->email)
+                    ->subject('Welcome to MyApp');
         });
 
         return response()->json([
-            'message' => 'Register Berhasil, Tautan reset password telah dikirim ke email Anda.',
+            'message' => 'Tautan reset password telah dikirim ke email Anda.',
         ], 200);
     }
 }
