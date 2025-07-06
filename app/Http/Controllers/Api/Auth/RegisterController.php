@@ -56,7 +56,7 @@ class RegisterController extends Controller
     public function sendResetLinkEmail(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:users,email',
+            'email' => 'required',
         ]);
 
         $user = User::where('email', $request->email)->first();
