@@ -19,7 +19,7 @@ Route::middleware([VerifyJwtToken::Class])->get('/dashboard', [\App\Http\Control
 Route::middleware([VerifyJwtToken::Class])->get('/dashboard/student', [\App\Http\Controllers\DashboardController::class, 'student']); 
 
 Route::middleware([VerifyJwtToken::Class])->apiResource('/user', App\Http\Controllers\Api\UserController::class);
-Route::middleware([VerifyJwtToken::Class])->apiResource('/role', App\Http\Controllers\RoleController::class);
+Route::apiResource('/role', App\Http\Controllers\RoleController::class);
 Route::middleware([VerifyJwtToken::Class])->apiResource('/faculty', App\Http\Controllers\FacultyController::class);
 Route::middleware([VerifyJwtToken::Class])->apiResource('/study_program', App\Http\Controllers\StudyProgramController::class);
 Route::middleware([VerifyJwtToken::Class])->apiResource('/period', App\Http\Controllers\PeriodController::class);
