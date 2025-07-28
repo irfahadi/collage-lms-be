@@ -6,12 +6,12 @@ use Closure;
 // use Firebase\JWT\JWT;
 // use Firebase\JWT\Key;
 // use Firebase\JWT\ExpiredException;
-
 use Illuminate\Http\Request;
 use App\Models\User; // Assuming you still want to load your local user model
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log; // Good for logging errors
-
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 // Import the Firebase Admin SDK Auth and Exceptions
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Exception\Auth\InvalidToken; // Specific exceptions are helpful
@@ -54,26 +54,71 @@ class VerifyJwtToken
             // Get the Firebase User ID (UID) from the verified token
             $uid = $verifiedIdToken->claims()->get('sub');
 
-            // --- Optional: Find your local user record based on Firebase UID ---
-            // You MUST have a column in your 'users' table (e.g., 'firebase_uid')
-            // where you store the Firebase UID when the user first authenticates.
-            $user = User::where('id', $uid)->first();
+             // 1. Konfigurasi RabbitMQ
+                $connection = new AMQPStreamConnection(
+                    env('RABBITMQ_HOST'),
+                    env('RABBITMQ_PORT'),
+                    env('RABBITMQ_USER'),
+                    env('RABBITMQ_PASSWORD')
+                );
+                $channel = $connection->channel();
 
-            if (! $user) {
-                 // This could happen if a user exists in Firebase Auth but not your local DB
-                 Log::warning("User with Firebase UID {$uid} not found in local database.");
-                 return response()->json(['error' => 'User not found'], 404); // Or 401, depending on your policy
-            }
+                // 2. Buat antrian callback untuk menampung respons
+                list($callback_queue, ,) = $channel->queue_declare("", false, false, true, false);
+                $channel->queue_declare('user_service_queue', false, true, false, false);
 
-            // Set the local user model in Laravel's Auth context
-            Auth::setUser($user);
-            // --- End Optional Local User Lookup ---
+                // 3. Kirim pesan ke User Service
+                $correlation_id = uniqid();
+                $msg = new AMQPMessage(
+                    json_encode(['user_id' => $uid]),
+                    [
+                        'correlation_id' => $correlation_id,
+                        'reply_to' => $callback_queue
+                    ]
+                );
+                $channel->basic_publish($msg, '', 'user_service_queue');
 
-            // Or, if you only need the Firebase UID and claims, you could potentially
-            // set those directly or attach them to the request instead of a full User model.
-            // $request->attributes->set('firebase_uid', $uid);
-            // $request->attributes->set('firebase_claims', $verifiedIdToken->getClaims());
+                // 4. Tunggu respons dari User Service
+                $response = null;
+                $timeout = 5; // Detik
+                $start_time = time();
 
+                $channel->basic_consume(
+                    $callback_queue,
+                    '',
+                    false,
+                    true,
+                    false,
+                    false,
+                    function ($reply) use (&$response, $correlation_id) {
+                        if ($reply->get('correlation_id') == $correlation_id) {
+                            $response = json_decode($reply->body, true);
+                        }
+                    }
+                );
+
+                // Loop hingga mendapat respons atau timeout
+                while (!$response) {
+                    $channel->wait(null, false, 1);
+                    if (time() - $start_time >= $timeout) {
+                        throw new \Exception("User Service timeout");
+                    }
+                }
+
+                // 5. Tutup koneksi
+                $channel->close();
+                $connection->close();
+
+                // 6. Periksa respons
+                if (!isset($response['exists']) || !$response['exists']) {
+                    return response()->json(['error' => 'User not found'], 404);
+                }
+
+                // 7. Buat user object dari data yang diterima
+                $userData = $response['user'] ?? ['id' => $uid];
+                $user = new User();
+                $user->forceFill($userData);
+                Auth::setUser($user);
 
             return $next($request);
 
